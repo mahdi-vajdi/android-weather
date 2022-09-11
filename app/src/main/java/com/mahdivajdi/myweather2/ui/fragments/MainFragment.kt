@@ -1,12 +1,14 @@
 package com.mahdivajdi.myweather2.ui.fragments
 
 import android.Manifest
+import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
 import android.util.Log.d
 import android.util.Log.i
 import android.view.*
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -40,7 +42,7 @@ class MainFragment : Fragment() {
 
     private val citiesViewModel: CitiesViewModel by activityViewModels {
         CitiesViewModelFactory(
-            activity!!.application,
+            requireActivity().application,
             CityRepository(
                 CityRemoteDataSource(GeocodeApi),
                 (activity?.application as App).database.cityDao()
@@ -48,47 +50,15 @@ class MainFragment : Fragment() {
         )
     }
 
-    // FusedLocationProviderClient - Main class for receiving location updates.
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
-    // Location permission request
-    private val locationPermissionRequest = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        if (isGranted) {
-            fusedLocationClient.getCurrentLocation(Priority.PRIORITY_BALANCED_POWER_ACCURACY,
-                object : CancellationToken() {
-                    override fun onCanceledRequested(p0: OnTokenCanceledListener): CancellationToken =
-                        CancellationTokenSource().token
-
-                    override fun isCancellationRequested(): Boolean = false
-                }
-            ).addOnSuccessListener { location: Location? ->
-                if (location == null)
-                    d("locationy", "Can't get location")
-                else {
-                    val lat = location.latitude
-                    val lon = location.longitude
-                    i("locationy", "location: lat= $lat  lon= $lon")
-                    citiesViewModel.getRemoteCityByCoordinates(lat, lon)
-                }
-            }
-        }
-        else {
-            d("locationy", "Location permission denied")
-        }
-    }
-
     private lateinit var workManager: WorkManager
     private lateinit var outputWorkInfo: LiveData<List<WorkInfo>>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        workManager = WorkManager.getInstance(activity!!.application)
+        workManager = WorkManager.getInstance(requireActivity().application)
         outputWorkInfo = workManager.getWorkInfosByTagLiveData(WORKER_REFRESH_TAG)
 
-        // Location
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
-        locationPermissionRequest.launch(Manifest.permission.ACCESS_COARSE_LOCATION)
+
     }
 
     override fun onCreateView(
@@ -166,7 +136,8 @@ class MainFragment : Fragment() {
     companion object {
         private const val TAG = "weatherApi"
         private const val WORKER_REFRESH_TAG = "weatherApi"
-        private val LOCATION_PERMISSIONS = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+        private val LOCATION_PERMISSIONS = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION)
     }
 }
 
