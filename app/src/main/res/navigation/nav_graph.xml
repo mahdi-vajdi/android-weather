@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/mainFragment">
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.mahdivajdi.myweather2.ui.fragments.MainFragment"
+        android:label="MainFragment" >
+        <action
+            android:id="@+id/action_mainFragment_to_citiesFragment"
+            app:destination="@id/citiesFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_dailyForecastFragment"
+            app:destination="@id/dailyForecastFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/citiesFragment"
+        android:name="com.mahdivajdi.myweather2.ui.fragments.CitiesFragment"
+        android:label="CitiesFragment" >
+        <action
+            android:id="@+id/action_citiesFragment_to_addCityFragment"
+            app:destination="@id/addCityFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addCityFragment"
+        android:name="com.mahdivajdi.myweather2.ui.fragments.AddCityFragment"
+        android:label="AddCityFragment" />
+    <fragment
+        android:id="@+id/dailyForecastFragment"
+        android:name="com.mahdivajdi.myweather2.ui.fragments.DailyForecastFragment"
+        android:label="fragment_daily_forecast"
+        tools:layout="@layout/fragment_daily_forecast" >
+        <argument
+            android:name="city"
+            app:argType="com.mahdivajdi.myweather2.domain.CityDomainModel" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.mahdivajdi.myweather2.ui.fragments.SettingsFragment"
+        android:label="SettingsFragment" />
+</navigation>

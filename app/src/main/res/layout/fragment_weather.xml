@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.mahdivajdi.myweather2.ui.viewmodel.WeatherViewModel" />
+
+        <variable
+            name="city"
+            type="com.mahdivajdi.myweather2.domain.CityDomainModel" />
+
+        <variable
+            name="tempUnit"
+            type="String" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#9FEDF3"
+        tools:context=".ui.fragments.WeatherFragment">
+
+        <TextView
+            android:id="@+id/textView_weather_cityName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@{city.cityName}"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="London" />
+
+        <TextView
+            android:id="@+id/textView_weather_current"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:fontFamily="sans-serif-light"
+            android:textColor="@android:color/white"
+            android:textSize="112sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView_weather_cityName"
+            tools:text="19" />
+
+        <TextView
+            android:id="@+id/textView_weather_tempUnit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:textColor="@android:color/white"
+            android:textSize="48sp"
+            app:layout_constraintStart_toEndOf="@+id/textView_weather_current"
+            app:layout_constraintTop_toTopOf="@+id/textView_weather_current"
+            tools:text="°C" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginRight="6dp"
+            app:cardBackgroundColor="#80009DAE"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="0dp"
+            app:cardMaxElevation="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView_weather_current">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TableRow
+                    android:id="@+id/table_todayWeather"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginRight="4dp"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp">
+
+                    <ImageView
+                        android:id="@+id/imageView_weather_todayIcon"
+                        android:layout_width="40dp"
+                        android:layout_height="match_parent"
+                        tools:src="@drawable/a02d"/>
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:padding="4dp"
+                        android:text="@{viewModel.getDayOfWeek(viewModel.dailyForecast[0].date)}"
+                        android:textColor="@android:color/white"
+                        tools:text="Sunday"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginRight="2dp"
+                        android:gravity="center"
+                        android:text="•"
+                        android:textColor="@android:color/white"
+                        android:textSize="22sp" />
+
+                    <TextView
+                        android:id="@+id/tv_todayDetail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:padding="4dp"
+                        android:text="@{viewModel.dailyForecast[0].detail}"
+                        android:textColor="@android:color/white"
+                        tools:text="Clear" />
+
+                    <TextView
+                        android:id="@+id/textView_weather_todayTemp"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="end|center_vertical"
+                        android:textColor="@android:color/white"
+                        tools:text="10 / 20" />
+
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/table_tomorrowWeather"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginRight="4dp"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp">
+
+                    <ImageView
+                        android:id="@+id/imageView_weather_tomorrowIcon"
+                        android:layout_width="40dp"
+                        android:layout_height="match_parent"
+                        tools:src="@drawable/a10d"/>
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:padding="4dp"
+                        android:text="@{viewModel.getDayOfWeek(viewModel.dailyForecast[1].date)}"
+                        android:textColor="@android:color/white"
+                        tools:text="Monday"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginRight="2dp"
+                        android:gravity="center"
+                        android:text="•"
+                        android:textColor="@android:color/white"
+                        android:textSize="22sp" />
+
+                    <TextView
+                        android:id="@+id/tv_tomorrowDetail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:padding="4dp"
+                        android:textColor="@android:color/white"
+                        android:text="@{viewModel.dailyForecast[1].detail}"
+                        tools:text="Rain" />
+
+                    <TextView
+                        android:id="@+id/textView_weather_tomorrowTemp"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="end|center_vertical"
+                        android:textColor="@android:color/white"
+                        tools:text="10 / 30" />
+
+                </TableRow>
+
+                <Button
+                    android:id="@+id/button_weather_toDailyForecast"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:text="More" />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView_weather_hourly"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="16dp"
+            android:orientation="horizontal"
+            android:scrollbars="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/card_view"
+            tools:listitem="@layout/list_item_hourly_forecast" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
