@@ -7,11 +7,11 @@
     <data>
         <variable
             name="viewModel"
-            type="com.mahdivajdi.myweather2.ui.viewmodel.WeatherViewModel" />
+            type="com.mahdivajdi.modernweather.ui.viewmodel.WeatherViewModel" />
 
         <variable
             name="city"
-            type="com.mahdivajdi.myweather2.domain.CityDomainModel" />
+            type="com.mahdivajdi.modernweather.domain.CityDomainModel" />
 
         <variable
             name="tempUnit"
