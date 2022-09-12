@@ -1,10 +1,6 @@
 package com.mahdivajdi.myweather2.data.remote
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.liveData
-import androidx.lifecycle.map
-import kotlinx.coroutines.Dispatchers
 import retrofit2.Response
 
 
@@ -27,6 +23,7 @@ abstract class BaseRemoteDataSource {
         try {
             val response = call()
             if (response.isSuccessful) {
+                Log.d("weatherApi", "Response: $response")
                 val body = response.body()
                 if (body != null) return ResultData.success(body)
             }
