@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.mahdivajdi.myweather2.ui.fragments.MainFragment"
+        android:name="com.mahdivajdi.modernweather.ui.fragments.MainFragment"
         android:label="MainFragment" >
         <action
             android:id="@+id/action_mainFragment_to_citiesFragment"
@@ -21,7 +21,7 @@
     </fragment>
     <fragment
         android:id="@+id/citiesFragment"
-        android:name="com.mahdivajdi.myweather2.ui.fragments.CitiesFragment"
+        android:name="com.mahdivajdi.modernweather.ui.fragments.CitiesFragment"
         android:label="CitiesFragment" >
         <action
             android:id="@+id/action_citiesFragment_to_addCityFragment"
@@ -29,19 +29,19 @@
     </fragment>
     <fragment
         android:id="@+id/addCityFragment"
-        android:name="com.mahdivajdi.myweather2.ui.fragments.AddCityFragment"
+        android:name="com.mahdivajdi.modernweather.ui.fragments.AddCityFragment"
         android:label="AddCityFragment" />
     <fragment
         android:id="@+id/dailyForecastFragment"
-        android:name="com.mahdivajdi.myweather2.ui.fragments.DailyForecastFragment"
+        android:name="com.mahdivajdi.modernweather.ui.fragments.DailyForecastFragment"
         android:label="fragment_daily_forecast"
         tools:layout="@layout/fragment_daily_forecast" >
         <argument
             android:name="city"
-            app:argType="com.mahdivajdi.myweather2.domain.CityDomainModel" />
+            app:argType="com.mahdivajdi.modernweather.domain.CityDomainModel" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.mahdivajdi.myweather2.ui.fragments.SettingsFragment"
+        android:name="com.mahdivajdi.modernweather.ui.fragments.SettingsFragment"
         android:label="SettingsFragment" />
 </navigation>
