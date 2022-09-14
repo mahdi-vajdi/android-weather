@@ -16,23 +16,15 @@ data class CityDomainModel(
     val longitude: Double
 ) : Parcelable {
 
-    companion object {
-        @JvmField
-        val CREATOR = object : Parcelable.Creator<CityDomainModel> {
-            override fun createFromParcel(parcel: Parcel) = CityDomainModel(parcel)
-            override fun newArray(size: Int) = arrayOfNulls<CityDomainModel>(size)
-        }
-    }
-
-    private constructor(parcel: Parcel) : this (
-        cityId = parcel.readInt(),
-        cityName = parcel.readString() ?: "No Name",
-        county = parcel.readString() ?: "No County",
-        state = parcel.readString() ?: "No State",
-        country = parcel.readString() ?: "No Country",
-        isCity = parcel.readBoolean(),
-        latitude = parcel.readDouble(),
-        longitude = parcel.readDouble()
+    constructor(parcel: Parcel) : this(
+        parcel.readInt(),
+        parcel.readString() ?: "No City",
+        parcel.readString() ?: "No County",
+        parcel.readString() ?: "No State",
+        parcel.readString() ?: "No Country",
+        parcel.readByte() != 0.toByte(),
+        parcel.readDouble(),
+        parcel.readDouble()
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -41,14 +33,26 @@ data class CityDomainModel(
         parcel.writeString(county)
         parcel.writeString(state)
         parcel.writeString(country)
-        isCity.let { parcel.writeBoolean(it) }
-        latitude.let { parcel.writeDouble(it) }
-        longitude.let { parcel.writeDouble(it) }
+        parcel.writeByte(if (isCity) 1 else 0)
+        parcel.writeDouble(latitude)
+        parcel.writeDouble(longitude)
     }
 
-    override fun describeContents() = 0
+    override fun describeContents(): Int {
+        return 0
+    }
 
+    companion object CREATOR : Parcelable.Creator<CityDomainModel> {
+        override fun createFromParcel(parcel: Parcel): CityDomainModel {
+            return CityDomainModel(parcel)
+        }
+
+        override fun newArray(size: Int): Array<CityDomainModel?> {
+            return arrayOfNulls(size)
+        }
+    }
 }
+
 
 data class CurrentWeatherDomainModel(
     val cityId: Int,
