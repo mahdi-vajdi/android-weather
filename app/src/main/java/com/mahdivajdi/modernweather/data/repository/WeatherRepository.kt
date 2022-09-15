@@ -6,11 +6,11 @@ import androidx.lifecycle.map
 import com.mahdivajdi.modernweather.data.local.CurrentWeatherDao
 import com.mahdivajdi.modernweather.data.local.DailyForecastDao
 import com.mahdivajdi.modernweather.data.local.HourlyForecastDao
-import com.mahdivajdi.modernweather.data.local.asDomainModel
+import com.mahdivajdi.modernweather.data.local.hourlyAsDomainModel
+import com.mahdivajdi.modernweather.data.local.dailyAsDomainModel
+import com.mahdivajdi.modernweather.data.local.currentAsDomainModel
 import com.mahdivajdi.modernweather.data.remote.*
-import com.mahdivajdi.modernweather.domain.CurrentWeatherDomainModel
-import com.mahdivajdi.modernweather.domain.DailyForecastDomainModel
-import com.mahdivajdi.modernweather.domain.HourlyForecastDomainModel
+import com.mahdivajdi.modernweather.domain.*
 
 class WeatherRepository(
     private val weatherRemoteSource: WeatherRemoteDataSource,
@@ -24,22 +24,28 @@ class WeatherRepository(
     }
 
     // The CurrentWeather that we get from api
-    fun currentWeather(cityId: Int): LiveData<CurrentWeatherDomainModel> =
-        currentLocalSource.getCurrentWeather(cityId).map {
-            it.asDomainModel()
+    fun currentWeather(cityId: Int): LiveData<CurrentWeatherDomainModel> {
+        val localCurrent = currentLocalSource.getCurrentWeather(cityId)
+        return localCurrent.map {
+            it.currentAsDomainModel()
         }
+    }
 
     // The HourlyForecast that we get from api
-    fun hourlyForecast(cityId: Int): LiveData<List<HourlyForecastDomainModel>> =
-        hourlyLocalSource.getHourlyForecasts(cityId).map { hourlyList ->
-            hourlyList.map { it.asDomainModel() }
+    fun hourlyForecast(cityId: Int): LiveData<List<HourlyForecastDomainModel>> {
+        val localHourly = hourlyLocalSource.getHourlyForecasts(cityId)
+        return localHourly.map { hourlyList ->
+            hourlyList.map { it.hourlyAsDomainModel() }
         }
+    }
 
     // The DailyForecast that we get from api
-    fun dailyForecast(cityId: Int): LiveData<List<DailyForecastDomainModel>> =
-        dailyLocalSource.getDailyForecasts(cityId).map { dailyList ->
-            dailyList.map { it.asDomainModel() }
+    fun dailyForecast(cityId: Int): LiveData<List<DailyForecastDomainModel>> {
+        val localDaily = dailyLocalSource.getDailyForecasts(cityId)
+        return localDaily.map { dailyList ->
+            dailyList.map { it.dailyAsDomainModel() }
         }
+    }
 
     suspend fun refreshWeather(cityId: Int, lat: Double, lon: Double) {
         when (val remoteWeather = weatherRemoteSource.getWeather(lat, lon)) {

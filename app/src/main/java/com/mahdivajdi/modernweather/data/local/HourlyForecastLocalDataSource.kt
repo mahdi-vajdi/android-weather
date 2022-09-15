@@ -37,10 +37,21 @@ data class HourlyForecastLocalModel(
     val icon: String
 )
 
-fun HourlyForecastLocalModel.asDomainModel() =
-    HourlyForecastDomainModel(
-        cityId = this.cityId,
-        date = this.date,
-        temp = this.temp.toInt(),
-        icon = this.icon
-    )
+fun HourlyForecastLocalModel?.hourlyAsDomainModel(): HourlyForecastDomainModel {
+    return if (this != null) {
+        HourlyForecastDomainModel(
+            cityId = this.cityId,
+            date = this.date,
+            temp = this.temp.toInt(),
+            icon = this.icon
+        )
+    } else {
+        HourlyForecastDomainModel(
+            cityId = 0,
+            date = 0,
+            temp = -500,
+            icon = "01d",
+        )
+    }
+
+}

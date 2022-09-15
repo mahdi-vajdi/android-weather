@@ -1,7 +1,7 @@
 package com.mahdivajdi.modernweather.data.repository
 
 import com.mahdivajdi.modernweather.data.local.CityDao
-import com.mahdivajdi.modernweather.data.local.asDomainModel
+import com.mahdivajdi.modernweather.data.local.cityAsDomainModel
 import com.mahdivajdi.modernweather.data.remote.CityRemoteDataSource
 import com.mahdivajdi.modernweather.data.remote.asDomainModel
 import com.mahdivajdi.modernweather.domain.CityDomainModel
@@ -24,17 +24,21 @@ class CityRepository(
         return null
     }
 
-    suspend fun getRemoteCityByCoordinates(lat: Double, lon: Double): CityDomainModel? {
+    // Get data for the city using the coordinates from location provider
+    // Only used for current location feature. change if it needs to be used elsewhere
+    suspend fun getRemoteCityByCoordinates(lat: Double, lon: Double, cityId: Int = 0): CityDomainModel? {
         val cityRemote = cityRemoteSource.getCityByCoordinates(lat, lon)
         cityRemote?.let { city ->
-            return city.asDomainModel()
+            return city.asDomainModel(cityId)
             }
         return null
     }
 
     fun getLocalCities(): Flow<List<CityDomainModel>> =
         cityLocalSource.getCities().map { cityLocalList ->
-            cityLocalList.map { it.asDomainModel() }
+            cityLocalList.map {
+                it.cityAsDomainModel()
+            }
         }
 
     suspend fun deleteCity(city: CityDomainModel) {

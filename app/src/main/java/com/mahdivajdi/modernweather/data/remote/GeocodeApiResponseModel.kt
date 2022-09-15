@@ -71,8 +71,9 @@ data class LatLng(
 )
 
 
-fun CityRemoteModel.asDomainModel() =
+fun CityRemoteModel.asDomainModel(cityId: Int = 0) =
     CityDomainModel(
+        cityId = cityId,
         cityName = this.adminArea5,
         county = this.adminArea4,
         state = this.adminArea3,

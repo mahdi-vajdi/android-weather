@@ -42,15 +42,27 @@ data class DailyForecastLocalModel(
 )
 
 
+fun DailyForecastLocalModel?.dailyAsDomainModel(): DailyForecastDomainModel {
+    return if (this != null) {
+        DailyForecastDomainModel(
+            cityId = this.cityId,
+            date = this.date,
+            minTemp = this.minTemp.toInt(),
+            maxTemp = this.maxTemp.toInt(),
+            icon = this.icon,
+            detail = this.detail
+        )
+    } else {
+        DailyForecastDomainModel(
+            cityId = 0,
+            date = 0,
+            minTemp = -500,
+            maxTemp = -200,
+            detail = "No Detail",
+            icon = "01d"
+        )
+    }
 
-fun DailyForecastLocalModel.asDomainModel() =
-    DailyForecastDomainModel(
-        cityId = this.cityId,
-        date = this.date,
-        minTemp = this.minTemp.toInt(),
-        maxTemp = this.maxTemp.toInt(),
-        icon = this.icon,
-        detail = this.detail
-    )
+}
 
 

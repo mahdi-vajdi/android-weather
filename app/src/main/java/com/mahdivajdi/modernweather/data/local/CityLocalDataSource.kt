@@ -48,7 +48,7 @@ interface CityDao {
 }
 
 
-fun CityLocalModel.asDomainModel() =
+fun CityLocalModel.cityAsDomainModel() =
     CityDomainModel(
         cityId = this.cityId,
         cityName = this.cityName,

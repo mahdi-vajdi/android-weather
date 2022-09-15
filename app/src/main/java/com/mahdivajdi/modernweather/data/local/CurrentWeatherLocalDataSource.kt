@@ -40,10 +40,21 @@ interface CurrentWeatherDao {
 }
 
 
-fun CurrentWeatherLocalModel.asDomainModel() =
-    CurrentWeatherDomainModel(
-        cityId = this.cityId,
-        temp = this.temp.toInt() ?: -200,
-        detail = this.detail,
-        date = this.date
-    )
+fun CurrentWeatherLocalModel?.currentAsDomainModel(): CurrentWeatherDomainModel {
+    return if (this != null) {
+        CurrentWeatherDomainModel(
+            cityId = this.cityId,
+            temp = this.temp.toInt(),
+            detail = this.detail,
+            date = this.date
+        )
+    } else {
+            CurrentWeatherDomainModel(
+                cityId = 0,
+                temp = -500,
+                detail = "No Detail",
+                date = 0
+            )
+    }
+
+}

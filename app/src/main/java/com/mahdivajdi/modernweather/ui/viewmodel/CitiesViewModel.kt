@@ -39,9 +39,11 @@ class CitiesViewModel(
         }
     }
 
-    fun getRemoteCityByCoordinates(lat: Double, lon: Double) {
+    // Get data for the city using the coordinates from location provider
+    // Only used for current location feature. change if it needs to be used elsewhere
+    fun getRemoteCityByCoordinates(lat: Double, lon: Double, cityId: Int = 0) {
         viewModelScope.launch {
-            val resultCity = cityRepo.getRemoteCityByCoordinates(lat, lon)
+            val resultCity = cityRepo.getRemoteCityByCoordinates(lat, lon, cityId)
             resultCity?.let { city ->
                 _currentCity.value = city
             }

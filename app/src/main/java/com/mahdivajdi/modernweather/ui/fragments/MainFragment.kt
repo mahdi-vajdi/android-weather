@@ -1,8 +1,13 @@
 package com.mahdivajdi.modernweather.ui.fragments
 
 import android.Manifest
+import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Bundle
+import android.util.Log
 import android.view.*
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -14,6 +19,9 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
 import com.mahdivajdi.modernweather.App
 import com.mahdivajdi.modernweather.R
 import com.mahdivajdi.modernweather.data.remote.CityRemoteDataSource
@@ -41,15 +49,29 @@ class MainFragment : Fragment() {
         )
     }
 
+    private lateinit var fusedLocationProvider: FusedLocationProviderClient
+    private val locationPermissionRequest = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            getCurrentLocationData()
+        } else {
+            Log.d("locationy", "Location permission denied")
+        }
+
+    }
+
     private lateinit var workManager: WorkManager
     private lateinit var outputWorkInfo: LiveData<List<WorkInfo>>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        fusedLocationProvider = LocationServices.getFusedLocationProviderClient(requireActivity())
+        getCurrentLocationData()
+
         workManager = WorkManager.getInstance(requireActivity().application)
         outputWorkInfo = workManager.getWorkInfosByTagLiveData(WORKER_REFRESH_TAG)
-
-
     }
 
     override fun onCreateView(
@@ -81,17 +103,19 @@ class MainFragment : Fragment() {
 
         // Listen to the city data for current location
         citiesViewModel.currentCity.observe(viewLifecycleOwner) {
+
+            Log.d("locationy", "MainFragment: currentCity: $it")
             citiesViewModel.insertNewCity(it)
         }
 
         // start the view pager fragments
         citiesViewModel.localCityList.observe(viewLifecycleOwner) { cityList ->
-            cityList?.let {
-                val viewPager = binding.viewPagerMain
-                val viewPagerAdapter =
-                    WeatherViewPagerAdapter(requireActivity().supportFragmentManager, lifecycle, it)
-                viewPager.adapter = viewPagerAdapter
-            }
+            val viewPager = binding.viewPagerMain
+            val viewPagerAdapter =
+                WeatherViewPagerAdapter(requireActivity().supportFragmentManager,
+                    lifecycle,
+                    cityList)
+            viewPager.adapter = viewPagerAdapter
         }
 
         // Set swipe refresh layout listener
@@ -117,6 +141,27 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
+    }
+
+    private fun getCurrentLocationData() {
+        if (ActivityCompat.checkSelfPermission(
+                requireActivity(),
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+        ) {
+            locationPermissionRequest.launch(Manifest.permission.ACCESS_COARSE_LOCATION)
+        }
+
+        fusedLocationProvider.getCurrentLocation(Priority.PRIORITY_BALANCED_POWER_ACCURACY, null)
+            .addOnSuccessListener { location: Location? ->
+                if (location != null) {
+                    val lat = location.latitude
+                    val lon = location.longitude
+                    Log.d("locationy", "getCurrentLocation: location is: lat=$lat  lon=$lon")
+                    citiesViewModel.getRemoteCityByCoordinates(lat, lon,1)
+                } else {
+                    Log.d("locationy", "getCurrentLocation: location is null")
+                }
+            }
     }
 
     override fun onDestroyView() {
