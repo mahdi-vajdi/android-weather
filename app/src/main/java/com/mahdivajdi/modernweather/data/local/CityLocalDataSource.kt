@@ -37,7 +37,7 @@ interface CityDao {
     @Query("SELECT * FROM $TABLE_NAME WHERE city_id = :id")
     fun getCity(id: Int): LiveData<CityLocalModel>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCity(cityLocalModel: CityLocalModel): Long
 
     @Update
