@@ -43,12 +43,12 @@ object GeocodeApi {
 }
 
 
-class CityRemoteDataSource(private val api: GeocodeApi) : BaseRemoteDataSource() {
+class CityRemoteDataSource(private val api: GeocodeApiService) : BaseRemoteDataSource() {
 
     suspend fun getCityByName(cityName: String): List<CityRemoteModel>? {
         Log.d("weatherApi", "CityRemoteDataSource: getCityByName: ")
         val result = super.getData {
-            api.instance.getCityByName(cityName)
+            api.getCityByName(cityName)
         }
         Log.d("weatherApi", "getCityByName: $result")
         if (result is ResultData.Success) {
@@ -63,7 +63,7 @@ class CityRemoteDataSource(private val api: GeocodeApi) : BaseRemoteDataSource()
         val result = super.getData {
             val latLon = "$lat,$lon"
             Log.d("weatherApi", "CityRemoteDataSource: getCityByCoordinates: latLon= $latLon")
-            api.instance.getCityByCoordinates(latLon)
+            api.getCityByCoordinates(latLon)
         }
         Log.d("weatherApi", "getCityByCoordinates: $result")
         if (result is ResultData.Success) {

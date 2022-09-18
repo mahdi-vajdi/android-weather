@@ -8,8 +8,9 @@ import com.mahdivajdi.modernweather.domain.CityDomainModel
 import com.mahdivajdi.modernweather.domain.toLocalModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class CityRepository(
+class CityRepository @Inject constructor(
     private val cityRemoteSource: CityRemoteDataSource,
     private val cityLocalSource: CityDao,
 ) {

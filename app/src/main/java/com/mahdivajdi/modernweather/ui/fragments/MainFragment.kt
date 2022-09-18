@@ -22,15 +22,10 @@ import androidx.work.WorkManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
-import com.mahdivajdi.modernweather.App
 import com.mahdivajdi.modernweather.R
-import com.mahdivajdi.modernweather.data.remote.CityRemoteDataSource
-import com.mahdivajdi.modernweather.data.remote.GeocodeApi
-import com.mahdivajdi.modernweather.data.repository.CityRepository
 import com.mahdivajdi.modernweather.databinding.FragmentMainBinding
 import com.mahdivajdi.modernweather.domain.CityDomainModel
 import com.mahdivajdi.modernweather.ui.viewmodel.CitiesViewModel
-import com.mahdivajdi.modernweather.ui.viewmodel.CitiesViewModelFactory
 import com.mahdivajdi.modernweather.workers.RefreshAllWeatherWorker
 
 
@@ -39,15 +34,17 @@ class MainFragment : Fragment() {
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
 
-    private val citiesViewModel: CitiesViewModel by activityViewModels {
+    val viewModel by activityViewModels<CitiesViewModel>()
+
+    /*private val citiesViewModel: CitiesViewModel by activityViewModels {
         CitiesViewModelFactory(
             requireActivity().application,
-            CityRepository(
+            CityRepositoryImpl(
                 CityRemoteDataSource(GeocodeApi),
                 (activity?.application as App).database.cityDao()
             )
         )
-    }
+    }*/
 
     private lateinit var fusedLocationProvider: FusedLocationProviderClient
     private val locationPermissionRequest = registerForActivityResult(
@@ -58,7 +55,6 @@ class MainFragment : Fragment() {
         } else {
             Log.d("locationy", "Location permission denied")
         }
-
     }
 
     private lateinit var workManager: WorkManager
@@ -102,14 +98,14 @@ class MainFragment : Fragment() {
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
 
         // Listen to the city data for current location
-        citiesViewModel.currentCity.observe(viewLifecycleOwner) {
+        viewModel.currentCity.observe(viewLifecycleOwner) {
 
             Log.d("locationy", "MainFragment: currentCity: $it")
-            citiesViewModel.insertNewCity(it)
+            viewModel.insertNewCity(it)
         }
 
         // start the view pager fragments
-        citiesViewModel.localCityList.observe(viewLifecycleOwner) { cityList ->
+        viewModel.localCityList.observe(viewLifecycleOwner) { cityList ->
             val viewPager = binding.viewPagerMain
             val viewPagerAdapter =
                 WeatherViewPagerAdapter(requireActivity().supportFragmentManager,
@@ -157,7 +153,7 @@ class MainFragment : Fragment() {
                     val lat = location.latitude
                     val lon = location.longitude
                     Log.d("locationy", "getCurrentLocation: location is: lat=$lat  lon=$lon")
-                    citiesViewModel.getRemoteCityByCoordinates(lat, lon,1)
+                    viewModel.getRemoteCityByCoordinates(lat, lon,1)
                 } else {
                     Log.d("locationy", "getCurrentLocation: location is null")
                 }

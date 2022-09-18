@@ -8,12 +8,15 @@ import androidx.work.WorkManager
 import com.mahdivajdi.modernweather.data.repository.CityRepository
 import com.mahdivajdi.modernweather.domain.CityDomainModel
 import com.mahdivajdi.modernweather.workers.RefreshCityWeatherWorker
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class CitiesViewModel(
+@HiltViewModel
+class CitiesViewModel @Inject constructor(
     application: Application,
-    private val cityRepo: CityRepository,
+    private val cityRepository: CityRepository,
 ) : ViewModel() {
 
     // List of the cities that we get from api
@@ -25,14 +28,14 @@ class CitiesViewModel(
     val currentCity: LiveData<CityDomainModel> get() = _currentCity
 
     // List of the cities that are stored in local database
-    private val _localCityList: Flow<List<CityDomainModel>> = cityRepo.getLocalCities()
+    private val _localCityList: Flow<List<CityDomainModel>> = cityRepository.getLocalCities()
     val localCityList: LiveData<List<CityDomainModel>> get() = _localCityList.asLiveData()
 
     private val workManager = WorkManager.getInstance(application)
 
     fun getRemoteCityByName(cityName: String) {
         viewModelScope.launch {
-            val resultList = cityRepo.getRemoteCityByName(cityName)
+            val resultList = cityRepository.getRemoteCityByName(cityName)
             resultList?.let { results ->
                 _remoteCityList.value = results.filter { it.isCity }
             }
@@ -43,7 +46,7 @@ class CitiesViewModel(
     // Only used for current location feature. change if it needs to be used elsewhere
     fun getRemoteCityByCoordinates(lat: Double, lon: Double, cityId: Int = 0) {
         viewModelScope.launch {
-            val resultCity = cityRepo.getRemoteCityByCoordinates(lat, lon, cityId)
+            val resultCity = cityRepository.getRemoteCityByCoordinates(lat, lon, cityId)
             resultCity?.let { city ->
                 _currentCity.value = city
             }
@@ -52,7 +55,7 @@ class CitiesViewModel(
 
     fun insertNewCity(city: CityDomainModel) {
         viewModelScope.launch {
-            val cityId: Long = cityRepo.insertCity(city)
+            val cityId: Long = cityRepository.insertCity(city)
 
             // Initiate worker to request weather data for the added city
             val workerInputData = Data.Builder()
@@ -69,23 +72,8 @@ class CitiesViewModel(
 
     fun deleteCity(city: CityDomainModel) {
         viewModelScope.launch {
-            cityRepo.deleteCity(city)
+            cityRepository.deleteCity(city)
         }
     }
 
-}
-
-class CitiesViewModelFactory(
-    private val application: Application,
-    private val cityRepo: CityRepository,
-) :
-    ViewModelProvider.Factory {
-
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(CitiesViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return CitiesViewModel(application, cityRepo) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
-    }
 }
