@@ -3,16 +3,14 @@ package com.mahdivajdi.modernweather.data.repository
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
-import com.mahdivajdi.modernweather.data.local.CurrentWeatherDao
-import com.mahdivajdi.modernweather.data.local.DailyForecastDao
-import com.mahdivajdi.modernweather.data.local.HourlyForecastDao
-import com.mahdivajdi.modernweather.data.local.hourlyAsDomainModel
-import com.mahdivajdi.modernweather.data.local.dailyAsDomainModel
-import com.mahdivajdi.modernweather.data.local.currentAsDomainModel
+import com.mahdivajdi.modernweather.data.local.*
 import com.mahdivajdi.modernweather.data.remote.*
-import com.mahdivajdi.modernweather.domain.*
+import com.mahdivajdi.modernweather.domain.CurrentWeatherDomainModel
+import com.mahdivajdi.modernweather.domain.DailyForecastDomainModel
+import com.mahdivajdi.modernweather.domain.HourlyForecastDomainModel
+import javax.inject.Inject
 
-class WeatherRepository(
+class WeatherRepository @Inject constructor(
     private val weatherRemoteSource: WeatherRemoteDataSource,
     private val currentLocalSource: CurrentWeatherDao,
     private val dailyLocalSource: DailyForecastDao,

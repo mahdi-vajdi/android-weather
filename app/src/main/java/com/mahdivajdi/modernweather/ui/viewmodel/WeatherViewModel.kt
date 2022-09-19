@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WeatherViewModel @Inject constructor(
-    private val weatherRepo: WeatherRepository,
+    private val weatherRepository: WeatherRepository,
 ) : ViewModel() {
 
     // The Weather data that we get from data base
@@ -29,9 +29,9 @@ class WeatherViewModel @Inject constructor(
 
     fun init(city: CityDomainModel) {
         Log.d(TAG, "init: weatherViewModel")
-        currentWeather = weatherRepo.currentWeather(city.cityId)
-        hourlyForecast = weatherRepo.hourlyForecast(city.cityId)
-        dailyForecast = weatherRepo.dailyForecast(city.cityId)
+        currentWeather = weatherRepository.currentWeather(city.cityId)
+        hourlyForecast = weatherRepository.hourlyForecast(city.cityId)
+        dailyForecast = weatherRepository.dailyForecast(city.cityId)
     }
 
     fun getDayOfWeek(epochTime: Long): String {

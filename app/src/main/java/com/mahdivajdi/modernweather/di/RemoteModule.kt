@@ -1,11 +1,9 @@
 package com.mahdivajdi.modernweather.di
 
-import com.mahdivajdi.modernweather.data.local.CityDao
 import com.mahdivajdi.modernweather.data.remote.CityRemoteDataSource
 import com.mahdivajdi.modernweather.data.remote.GeocodeApiService
 import com.mahdivajdi.modernweather.data.remote.OneCallApiService
 import com.mahdivajdi.modernweather.data.remote.WeatherRemoteDataSource
-import com.mahdivajdi.modernweather.data.repository.CityRepository
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module

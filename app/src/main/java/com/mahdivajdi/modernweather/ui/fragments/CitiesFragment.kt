@@ -20,16 +20,6 @@ class CitiesFragment : Fragment() {
 
     val viewModel by activityViewModels<CitiesViewModel>()
 
-    /*private val viewModel: CitiesViewModel by activityViewModels {
-        CitiesViewModelFactory(
-            (activity?.application as App),
-            CityRepositoryImpl(
-                CityRemoteDataSource(GeocodeApi),
-                (activity?.application as App).database.cityDao()
-            )
-        )
-    }*/
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,

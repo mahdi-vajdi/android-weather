@@ -27,24 +27,15 @@ import com.mahdivajdi.modernweather.databinding.FragmentMainBinding
 import com.mahdivajdi.modernweather.domain.CityDomainModel
 import com.mahdivajdi.modernweather.ui.viewmodel.CitiesViewModel
 import com.mahdivajdi.modernweather.workers.RefreshAllWeatherWorker
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class MainFragment : Fragment() {
 
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
 
     val viewModel by activityViewModels<CitiesViewModel>()
-
-    /*private val citiesViewModel: CitiesViewModel by activityViewModels {
-        CitiesViewModelFactory(
-            requireActivity().application,
-            CityRepositoryImpl(
-                CityRemoteDataSource(GeocodeApi),
-                (activity?.application as App).database.cityDao()
-            )
-        )
-    }*/
 
     private lateinit var fusedLocationProvider: FusedLocationProviderClient
     private val locationPermissionRequest = registerForActivityResult(

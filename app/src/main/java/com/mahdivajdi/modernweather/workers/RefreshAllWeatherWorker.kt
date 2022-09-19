@@ -3,10 +3,8 @@ package com.mahdivajdi.modernweather.workers
 import android.content.Context
 import android.util.Log.d
 import androidx.hilt.work.HiltWorker
-import androidx.work.*
-import com.mahdivajdi.modernweather.App
-import com.mahdivajdi.modernweather.data.remote.OneCallApi
-import com.mahdivajdi.modernweather.data.remote.WeatherRemoteDataSource
+import androidx.work.CoroutineWorker
+import androidx.work.WorkerParameters
 import com.mahdivajdi.modernweather.data.repository.CityRepository
 import com.mahdivajdi.modernweather.data.repository.WeatherRepository
 import dagger.assisted.Assisted
@@ -20,16 +18,8 @@ class RefreshAllWeatherWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted params: WorkerParameters,
     private val cityRepository: CityRepository,
-    private val weatherRepo: WeatherRepository,
+    private val weatherRepository: WeatherRepository,
 ) : CoroutineWorker(context, params) {
-
-
-    /*private val weatherRepo = WeatherRepository(
-        WeatherRemoteDataSource(OneCallApi),
-        app.database.currentWeatherDao(),
-        app.database.dailyForecastDao(),
-        app.database.hourlyForecastDao()
-    )*/
 
     override suspend fun doWork(): Result {
         withContext(Dispatchers.IO) {
@@ -38,7 +28,7 @@ class RefreshAllWeatherWorker @AssistedInject constructor(
             val cityList = cityRepository.getLocalCities().first()
             d(TAG, "cityList size: ${cityList.size}")
             for (city in cityList) {
-                weatherRepo.refreshWeather(city.cityId, city.latitude, city.longitude)
+                weatherRepository.refreshWeather(city.cityId, city.latitude, city.longitude)
             }
 
             d(TAG, "refresh all: doWork: worker success")

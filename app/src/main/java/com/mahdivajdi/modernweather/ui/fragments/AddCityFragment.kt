@@ -14,8 +14,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.mahdivajdi.modernweather.databinding.FragmentAddCityBinding
 import com.mahdivajdi.modernweather.ui.adapter.AddCityFragmentAdapter
 import com.mahdivajdi.modernweather.ui.viewmodel.CitiesViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class AddCityFragment : Fragment() {
 
     companion object {
@@ -26,16 +27,6 @@ class AddCityFragment : Fragment() {
     private val binding: FragmentAddCityBinding get() = _binding!!
 
     val viewModel by activityViewModels<CitiesViewModel>()
-
-    /*private val viewModel: CitiesViewModel by activityViewModels {
-        CitiesViewModelFactory(
-            requireActivity().application,
-            CityRepositoryImpl(
-                CityRemoteDataSource(GeocodeApi),
-                (activity?.application as App).database.cityDao()
-            )
-        )
-    }*/
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
