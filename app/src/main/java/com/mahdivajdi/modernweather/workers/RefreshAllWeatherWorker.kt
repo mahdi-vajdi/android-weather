@@ -1,47 +1,37 @@
 package com.mahdivajdi.modernweather.workers
 
 import android.content.Context
-import android.util.Log
+import android.util.Log.d
+import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.mahdivajdi.modernweather.App
-import com.mahdivajdi.modernweather.data.remote.CityRemoteDataSource
-import com.mahdivajdi.modernweather.data.remote.GeocodeApi
-import com.mahdivajdi.modernweather.data.remote.OneCallApi
-import com.mahdivajdi.modernweather.data.remote.WeatherRemoteDataSource
 import com.mahdivajdi.modernweather.data.repository.CityRepository
 import com.mahdivajdi.modernweather.data.repository.WeatherRepository
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 
-class RefreshAllWeatherWorker(context: Context, params: WorkerParameters) :
-    CoroutineWorker(context, params) {
-
-    private val app = context as App
-
-    private val cityRepo = CityRepository(
-        CityRemoteDataSource(GeocodeApi),
-        app.database.cityDao()
-    )
-
-    private val weatherRepo = WeatherRepository(
-        WeatherRemoteDataSource(OneCallApi),
-        app.database.currentWeatherDao(),
-        app.database.dailyForecastDao(),
-        app.database.hourlyForecastDao()
-    )
+@HiltWorker
+class RefreshAllWeatherWorker @AssistedInject constructor(
+    @Assisted context: Context,
+    @Assisted params: WorkerParameters,
+    private val cityRepository: CityRepository,
+    private val weatherRepository: WeatherRepository,
+) : CoroutineWorker(context, params) {
 
     override suspend fun doWork(): Result {
         withContext(Dispatchers.IO) {
-            Log.d(TAG, "refresh all: doWork: worker started")
+            d(TAG, "refresh all: doWork: worker started")
 
-            val cityList = cityRepo.getLocalCities().first()
+            val cityList = cityRepository.getLocalCities().first()
+            d(TAG, "cityList size: ${cityList.size}")
             for (city in cityList) {
-                weatherRepo.refreshWeather(city.cityId, city.latitude, city.longitude)
+                weatherRepository.refreshWeather(city.cityId, city.latitude, city.longitude)
             }
 
-            Log.d(TAG, "refresh all: doWork: worker success")
+            d(TAG, "refresh all: doWork: worker success")
         }
         return Result.success()
     }

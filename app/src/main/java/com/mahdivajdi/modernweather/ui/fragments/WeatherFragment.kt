@@ -3,27 +3,26 @@ package com.mahdivajdi.modernweather.ui.fragments
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.mahdivajdi.modernweather.App
-import com.mahdivajdi.modernweather.data.remote.OneCallApi
-import com.mahdivajdi.modernweather.data.remote.WeatherRemoteDataSource
-import com.mahdivajdi.modernweather.data.repository.WeatherRepository
 import com.mahdivajdi.modernweather.databinding.FragmentWeatherBinding
 import com.mahdivajdi.modernweather.domain.CityDomainModel
 import com.mahdivajdi.modernweather.ui.adapter.HourlyForecastListAdapter
 import com.mahdivajdi.modernweather.ui.getTemp
 import com.mahdivajdi.modernweather.ui.setIcon
 import com.mahdivajdi.modernweather.ui.viewmodel.WeatherViewModel
-import com.mahdivajdi.modernweather.ui.viewmodel.WeatherViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 
 
 private const val CITY_ARG = "city"
 
+@AndroidEntryPoint
 class WeatherFragment : Fragment() {
 
     private var _binding: FragmentWeatherBinding? = null
@@ -42,16 +41,7 @@ class WeatherFragment : Fragment() {
         }
     }
 
-    private val viewModel: WeatherViewModel by activityViewModels {
-        WeatherViewModelFactory(
-            WeatherRepository(
-                WeatherRemoteDataSource(OneCallApi),
-                (activity?.application as App).database.currentWeatherDao(),
-                (activity?.application as App).database.dailyForecastDao(),
-                (activity?.application as App).database.hourlyForecastDao()
-            )
-        )
-    }
+    private val viewModel by activityViewModels<WeatherViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

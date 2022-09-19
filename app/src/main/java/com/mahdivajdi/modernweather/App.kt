@@ -1,9 +1,20 @@
 package com.mahdivajdi.modernweather
 
 import android.app.Application
-import com.mahdivajdi.modernweather.data.local.AppDatabase
+import androidx.hilt.work.HiltWorkerFactory
+import androidx.work.Configuration
+import dagger.hilt.android.HiltAndroidApp
+import javax.inject.Inject
 
-class App : Application() {
+@HiltAndroidApp
+class App : Application(), Configuration.Provider {
 
-    val database: AppDatabase by lazy { AppDatabase.getDatabase(this) }
+    @Inject
+    lateinit var workerFactory: HiltWorkerFactory
+
+    override fun getWorkManagerConfiguration(): Configuration {
+        return Configuration.Builder()
+            .setWorkerFactory(workerFactory)
+            .build()
+    }
 }

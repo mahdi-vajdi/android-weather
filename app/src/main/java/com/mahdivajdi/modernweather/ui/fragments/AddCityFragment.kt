@@ -11,16 +11,12 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.mahdivajdi.modernweather.App
-import com.mahdivajdi.modernweather.data.remote.CityRemoteDataSource
-import com.mahdivajdi.modernweather.data.remote.GeocodeApi
-import com.mahdivajdi.modernweather.data.repository.CityRepository
 import com.mahdivajdi.modernweather.databinding.FragmentAddCityBinding
 import com.mahdivajdi.modernweather.ui.adapter.AddCityFragmentAdapter
 import com.mahdivajdi.modernweather.ui.viewmodel.CitiesViewModel
-import com.mahdivajdi.modernweather.ui.viewmodel.CitiesViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class AddCityFragment : Fragment() {
 
     companion object {
@@ -30,15 +26,7 @@ class AddCityFragment : Fragment() {
     private var _binding: FragmentAddCityBinding? = null
     private val binding: FragmentAddCityBinding get() = _binding!!
 
-    private val viewModel: CitiesViewModel by activityViewModels {
-        CitiesViewModelFactory(
-            requireActivity().application,
-            CityRepository(
-                CityRemoteDataSource(GeocodeApi),
-                (activity?.application as App).database.cityDao()
-            )
-        )
-    }
+    val viewModel by activityViewModels<CitiesViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

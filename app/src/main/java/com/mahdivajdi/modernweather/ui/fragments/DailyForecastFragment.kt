@@ -8,18 +8,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.mahdivajdi.modernweather.App
-import com.mahdivajdi.modernweather.data.remote.OneCallApi
-import com.mahdivajdi.modernweather.data.remote.WeatherRemoteDataSource
-import com.mahdivajdi.modernweather.data.repository.WeatherRepository
 import com.mahdivajdi.modernweather.databinding.FragmentDailyForecastBinding
 import com.mahdivajdi.modernweather.domain.CityDomainModel
 import com.mahdivajdi.modernweather.ui.adapter.DailyForecastListAdapter
 import com.mahdivajdi.modernweather.ui.viewmodel.WeatherViewModel
-import com.mahdivajdi.modernweather.ui.viewmodel.WeatherViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 
 private const val CITY_ARG = "city"
 
+@AndroidEntryPoint
 class DailyForecastFragment : Fragment() {
 
     private var _binding: FragmentDailyForecastBinding? = null
@@ -27,16 +24,7 @@ class DailyForecastFragment : Fragment() {
 
     private var city: CityDomainModel? = null
 
-    private val viewModel: WeatherViewModel by activityViewModels {
-        WeatherViewModelFactory(
-            WeatherRepository(
-                WeatherRemoteDataSource(OneCallApi),
-                (activity?.application as App).database.currentWeatherDao(),
-                (activity?.application as App).database.dailyForecastDao(),
-                (activity?.application as App).database.hourlyForecastDao()
-            )
-        )
-    }
+    private val viewModel by activityViewModels<WeatherViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

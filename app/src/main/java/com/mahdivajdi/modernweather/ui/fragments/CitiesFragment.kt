@@ -7,30 +7,18 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
-import com.mahdivajdi.modernweather.App
-import com.mahdivajdi.modernweather.data.remote.CityRemoteDataSource
-import com.mahdivajdi.modernweather.data.remote.GeocodeApi
-import com.mahdivajdi.modernweather.data.repository.CityRepository
 import com.mahdivajdi.modernweather.databinding.FragmentCitiesBinding
 import com.mahdivajdi.modernweather.ui.adapter.CitiesFragmentAdapter
 import com.mahdivajdi.modernweather.ui.viewmodel.CitiesViewModel
-import com.mahdivajdi.modernweather.ui.viewmodel.CitiesViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class CitiesFragment : Fragment() {
 
     private var _binding: FragmentCitiesBinding? = null
     val binding: FragmentCitiesBinding get() = _binding!!
 
-    private val viewModel: CitiesViewModel by activityViewModels {
-        CitiesViewModelFactory(
-            (activity?.application as App),
-            CityRepository(
-                CityRemoteDataSource(GeocodeApi),
-                (activity?.application as App).database.cityDao()
-            )
-        )
-    }
+    val viewModel by activityViewModels<CitiesViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

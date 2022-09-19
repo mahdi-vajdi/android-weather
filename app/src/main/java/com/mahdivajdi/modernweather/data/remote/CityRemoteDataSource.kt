@@ -1,11 +1,7 @@
 package com.mahdivajdi.modernweather.data.remote
 
 import android.util.Log
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -25,30 +21,12 @@ interface GeocodeApiService {
 }
 
 
-object GeocodeApi {
-
-    private val moshi = Moshi.Builder()
-        .add(KotlinJsonAdapterFactory())
-        .build()
-
-    val instance: GeocodeApiService by lazy {
-        val retrofit = Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(MoshiConverterFactory.create(moshi))
-            .build()
-
-        retrofit.create(GeocodeApiService::class.java)
-    }
-
-}
-
-
-class CityRemoteDataSource(private val api: GeocodeApi) : BaseRemoteDataSource() {
+class CityRemoteDataSource(private val api: GeocodeApiService) : BaseRemoteDataSource() {
 
     suspend fun getCityByName(cityName: String): List<CityRemoteModel>? {
         Log.d("weatherApi", "CityRemoteDataSource: getCityByName: ")
         val result = super.getData {
-            api.instance.getCityByName(cityName)
+            api.getCityByName(cityName)
         }
         Log.d("weatherApi", "getCityByName: $result")
         if (result is ResultData.Success) {
@@ -63,7 +41,7 @@ class CityRemoteDataSource(private val api: GeocodeApi) : BaseRemoteDataSource()
         val result = super.getData {
             val latLon = "$lat,$lon"
             Log.d("weatherApi", "CityRemoteDataSource: getCityByCoordinates: latLon= $latLon")
-            api.instance.getCityByCoordinates(latLon)
+            api.getCityByCoordinates(latLon)
         }
         Log.d("weatherApi", "getCityByCoordinates: $result")
         if (result is ResultData.Success) {
