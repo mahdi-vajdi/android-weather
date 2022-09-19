@@ -19,18 +19,17 @@ import kotlinx.coroutines.withContext
 class RefreshAllWeatherWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted params: WorkerParameters,
-    private val cityRepository: CityRepository
-) :
-    CoroutineWorker(context, params) {
+    private val cityRepository: CityRepository,
+    private val weatherRepo: WeatherRepository,
+) : CoroutineWorker(context, params) {
 
-    private val app = context as App
 
-    private val weatherRepo = WeatherRepository(
+    /*private val weatherRepo = WeatherRepository(
         WeatherRemoteDataSource(OneCallApi),
         app.database.currentWeatherDao(),
         app.database.dailyForecastDao(),
         app.database.hourlyForecastDao()
-    )
+    )*/
 
     override suspend fun doWork(): Result {
         withContext(Dispatchers.IO) {

@@ -42,16 +42,18 @@ class WeatherFragment : Fragment() {
         }
     }
 
-    private val viewModel: WeatherViewModel by activityViewModels {
-        WeatherViewModelFactory(
-            WeatherRepository(
-                WeatherRemoteDataSource(OneCallApi),
-                (activity?.application as App).database.currentWeatherDao(),
-                (activity?.application as App).database.dailyForecastDao(),
-                (activity?.application as App).database.hourlyForecastDao()
-            )
-        )
-    }
+    private val viewModel by activityViewModels<WeatherViewModel>()
+
+//    private val viewModel: WeatherViewModel by activityViewModels {
+//        WeatherViewModelFactory(
+//            WeatherRepository(
+//                WeatherRemoteDataSource(OneCallApi),
+//                (activity?.application as App).database.currentWeatherDao(),
+//                (activity?.application as App).database.dailyForecastDao(),
+//                (activity?.application as App).database.hourlyForecastDao()
+//            )
+//        )
+//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

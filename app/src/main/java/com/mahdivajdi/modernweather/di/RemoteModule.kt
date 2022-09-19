@@ -3,6 +3,8 @@ package com.mahdivajdi.modernweather.di
 import com.mahdivajdi.modernweather.data.local.CityDao
 import com.mahdivajdi.modernweather.data.remote.CityRemoteDataSource
 import com.mahdivajdi.modernweather.data.remote.GeocodeApiService
+import com.mahdivajdi.modernweather.data.remote.OneCallApiService
+import com.mahdivajdi.modernweather.data.remote.WeatherRemoteDataSource
 import com.mahdivajdi.modernweather.data.repository.CityRepository
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -36,6 +38,27 @@ object RemoteModule {
     @Singleton
     fun providesCityRemoteDataSource(geocodeApi: GeocodeApiService): CityRemoteDataSource {
         return CityRemoteDataSource(geocodeApi)
+    }
+
+
+    @Provides
+    @Singleton
+    fun providesOnecallApiService(): OneCallApiService {
+        val BASE_URL = "https://api.openweathermap.org/data/2.5/"
+        val moshi = Moshi.Builder()
+            .add(KotlinJsonAdapterFactory())
+            .build()
+        return Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .build()
+            .create(OneCallApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun providesWeatherRemoteDataSource(oneCallApi: OneCallApiService): WeatherRemoteDataSource {
+        return WeatherRemoteDataSource(oneCallApi)
     }
 
 

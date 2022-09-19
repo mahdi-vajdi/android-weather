@@ -27,7 +27,9 @@ class DailyForecastFragment : Fragment() {
 
     private var city: CityDomainModel? = null
 
-    private val viewModel: WeatherViewModel by activityViewModels {
+    private val viewModel by activityViewModels<WeatherViewModel>()
+
+    /*private val viewModel: WeatherViewModel by activityViewModels {
         WeatherViewModelFactory(
             WeatherRepository(
                 WeatherRemoteDataSource(OneCallApi),
@@ -36,7 +38,7 @@ class DailyForecastFragment : Fragment() {
                 (activity?.application as App).database.hourlyForecastDao()
             )
         )
-    }
+    }*/
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

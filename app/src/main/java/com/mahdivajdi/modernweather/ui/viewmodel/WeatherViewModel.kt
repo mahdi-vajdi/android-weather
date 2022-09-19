@@ -9,14 +9,18 @@ import com.mahdivajdi.modernweather.domain.CityDomainModel
 import com.mahdivajdi.modernweather.domain.CurrentWeatherDomainModel
 import com.mahdivajdi.modernweather.domain.DailyForecastDomainModel
 import com.mahdivajdi.modernweather.domain.HourlyForecastDomainModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.TextStyle
 import java.util.*
+import javax.inject.Inject
 
-
-class WeatherViewModel(private val weatherRepo: WeatherRepository) : ViewModel() {
+@HiltViewModel
+class WeatherViewModel @Inject constructor(
+    private val weatherRepo: WeatherRepository,
+) : ViewModel() {
 
     // The Weather data that we get from data base
     lateinit var currentWeather: LiveData<CurrentWeatherDomainModel>

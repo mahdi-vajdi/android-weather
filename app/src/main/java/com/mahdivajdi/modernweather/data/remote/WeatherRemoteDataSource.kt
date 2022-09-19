@@ -38,11 +38,11 @@ object OneCallApi {
 }
 
 
-class WeatherRemoteDataSource(private val api: OneCallApi) : BaseRemoteDataSource() {
+class WeatherRemoteDataSource(private val api: OneCallApiService) : BaseRemoteDataSource() {
 
     suspend fun getWeather(lat: Double, lon: Double): ResultData<OneCallApiResponseModel> {
         return super.getData {
-            api.instance.getWeather(lat, lon)
+            api.getWeather(lat, lon)
         }
     }
 }
